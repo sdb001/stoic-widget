@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Stoic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --marble: #F5F5F5;
+      --charcoal: #2F2F2F;
+      --void: #000000;
+      --stone: #8A8A8A;
+      --bg: var(--void);
+      --text: var(--marble);
+      --text-muted: var(--stone);
+      --border: #3A3A3A;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: var(--marble);
+        --text: var(--void);
+        --text-muted: #5A5A5A;
+        --border: #D0D0D0;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .widget {
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .ornament {
+      color: var(--text-muted);
+      font-size: 14px;
+      letter-spacing: 8px;
+      margin-bottom: 24px;
+      opacity: 0.6;
+    }
+
+    .quote {
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: 0.3px;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 auto 20px;
+    }
+
+    .author {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .source {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 400px) {
+      .quote {
+        font-size: 18px;
+      }
+      .widget {
+        padding: 0 8px;
+      }
+    }
+
+    .widget {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="widget">
+    <div class="ornament">///</div>
+    <p class="quote" id="quote"></p>
+    <div class="divider"></div>
+    <p class="author" id="author"></p>
+    <p class="source" id="source"></p>
+  </div>
+
+  <script>
+    const quotes = [
+      // ═══════════════════════════════════════════════════════════════
+      // MARCUS AURELIUS (150 quotes)
+      // ═══════════════════════════════════════════════════════════════
+      { text: "You have power over your mind—not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The object of life is not to be on the side of the majority, but to escape finding oneself in the ranks of the insane.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Very little is needed to make a happy life; it is all within yourself, in your way of thinking.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "When you arise in the morning, think of what a precious privilege it is to be alive—to breathe, to think, to enjoy, to love.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The soul becomes dyed with the color of its thoughts.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Accept the things to which fate binds you, and love the people with whom fate brings you together.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "How much more grievous are the consequences of anger than the causes of it.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Never let the future disturb you. You will meet it, if you have to, with the same weapons of reason which today arm you against the present.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "It is not death that a man should fear, but he should fear never beginning to live.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The best revenge is not to be like your enemy.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "If it is not right, do not do it; if it is not true, do not say it.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The happiness of your life depends upon the quality of your thoughts.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Dwell on the beauty of life. Watch the stars, and see yourself running with them.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The first rule is to keep an untroubled spirit. The second is to look things in the face and know them for what they are.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "When another blames you or hates you, or people voice similar criticisms, go to their souls, penetrate inside and see what sort of people they are.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Our life is what our thoughts make it.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Begin each day by telling yourself: Today I shall be meeting with interference, ingratitude, insolence, disloyalty, ill-will, and selfishness.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Loss is nothing else but change, and change is Nature's delight.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The universe is change; our life is what our thoughts make it.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Here is a rule to remember in future, when anything tempts you to feel bitter: not 'This is misfortune,' but 'To bear this worthily is good fortune.'", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Look well into thyself; there is a source of strength which will always spring up if thou wilt always look.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "No man is happy who does not think himself so.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Reject your sense of injury and the injury itself disappears.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "He who lives in harmony with himself lives in harmony with the universe.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Time is a sort of river of passing events, and strong is its current; no sooner is a thing brought to sight than it is swept by and another takes its place.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Adapt yourself to the things among which your lot has been cast and love sincerely the fellow creatures with whom destiny has ordained that you shall live.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Nothing happens to any man that he is not formed by nature to bear.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The art of living is more like wrestling than dancing.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Look back over the past, with its changing empires that rose and fell, and you can foresee the future too.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Receive without conceit, release without struggle.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "A man's worth is no greater than the worth of his ambitions.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Be tolerant with others and strict with yourself.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Remember that very little is needed to make a happy life.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Execute every act of thy life as though it were thy last.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Think of yourself as dead. You have lived your life. Now take what's left and live it properly.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "If you are distressed by anything external, the pain is not due to the thing itself, but to your estimate of it.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The only wealth which you will keep forever is the wealth you have given away.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Do not act as if you were going to live ten thousand years. Death hangs over you.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The impediment to action advances action. What stands in the way becomes the way.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "How much trouble he avoids who does not look to see what his neighbor says or does or thinks.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Nowhere can man find a quieter or more untroubled retreat than in his own soul.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "A person's worth is measured by the worth of what he values.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Do not disturb yourself by picturing your life as a whole.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The things you think about determine the quality of your mind.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "It is in your power to withdraw yourself whenever you desire. Perfect tranquility within consists in the good ordering of the mind.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Whatever anyone does or says, I must be emerald and keep my color.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Do every act of your life as if it were your last.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Life is neither good or evil, but only a place for good and evil.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "People who labor all their lives but have no purpose to direct every thought and impulse toward are wasting their time.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "At dawn, when you have trouble getting out of bed, tell yourself: I have to go to work—as a human being.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "What we do now echoes in eternity.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Do not indulge in dreams of having what you have not, but reckon up the chief of the blessings you do possess.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Today I escaped anxiety. Or no, I discarded it, because it was within me, in my own perceptions.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "That which is not good for the beehive cannot be good for the bees.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Whoever does wrong, wrongs himself; whoever does injustice, does it to himself, making himself evil.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "How ridiculous and how strange to be surprised at anything which happens in life.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "To be even-minded is the greatest virtue.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Anger cannot be dishonest.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The best answer to anger is silence.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The object of life is not to be on the side of the majority, but to escape finding oneself in the ranks of the insane.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Choose not to be harmed—and you won't feel harmed. Don't feel harmed—and you haven't been.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "To refrain from imitation is the best revenge.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Let opinion be taken away, and no man will think himself wronged.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Your days are numbered. Use them to throw open the windows of your soul to the sun.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Confine yourself to the present.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "No state sorrier than that of the man who keeps going in circles.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The blazing fire makes flames and brightness out of everything thrown into it.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Alexander the Great and his mule driver both died and the same thing happened to both.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Stop allowing your mind to be a slave, to be jerked about by selfish impulses.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Everything that happens is either endurable or not. If it's endurable, then endure it. If it's not endurable, then stop complaining.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "How easy it is to repel and to wipe away every impression which is troublesome or unsuitable.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Concentrate every minute on doing what's in front of you with precise and genuine seriousness.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Never esteem anything as of advantage to you that will make you break your word or lose your self-respect.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Everything is only for a day, both that which remembers and that which is remembered.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Do not think that what is hard for you to master is humanly impossible.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Be like a rocky promontory against which the restless surf continually pounds.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "When you've done well and another has benefited by it, why look for a third thing—credit for the good deed?", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "All things are implicated with one another, and the bond is holy.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "It never ceases to amaze me: we all love ourselves more than other people, but care more about their opinion than our own.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Soon you'll be ashes or bones. A mere name at most—and even that is just a sound, an echo.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Dig within. Within is the wellspring of Good; and it is always ready to bubble up, if you just dig.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "To live happily is an inward power of the soul.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The present is the only thing of which a man can be deprived.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "To the wise, life is a problem; to the fool, a solution.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Observe constantly that all things take place by change.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Let not your mind run on what you lack as much as on what you have already.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "That which is really beautiful has no need of anything.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "What injures the hive, injures the bee.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Pass through this brief patch of time in harmony with nature.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The object in life is not to be on the side of the majority but to escape finding oneself in the ranks of the insane.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Look within. Within is the fountain of good.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The memory of everything is very soon overwhelmed in time.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Things do not touch the soul.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Give yourself a gift: the present moment.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "If someone is able to show me that what I think or do is not right, I will happily change.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "You could leave life right now. Let that determine what you do and say and think.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Everything harmonizes with me, which is harmonious to thee, O Universe.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The constant recollection of death is the test of human conduct.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Man must be arched and buttressed from within, else the temple wavers to the dust.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Perfection of character is this: to live each day as if it were your last.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Forward, as occasion offers. Never look round to see whether any shall note it.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "To understand the true quality of people, you must look into their minds.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Natural ability without education has more often raised a man to glory than education without natural ability.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "A wrongdoer is often a man who has left something undone, not always one who has done something.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Observe always that everything is the result of change.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The object of life is not to be on the side of the majority.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "When you arise in the morning think of what a privilege it is to be alive.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "It is not fitting that I should give myself pain, for I have never intentionally given pain even to another.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Death smiles at us all; all we can do is smile back.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Because a thing seems difficult for you, do not think it impossible.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "How much time he gains who does not look to see what his neighbor says or does.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "We ought to do good to others as simply as a horse runs, or a bee makes honey.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Aptitude found in the understanding and is often inherited. Genius coming from reason and imagination, rarely.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Men exist for the sake of one another.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Never value anything as profitable that compels you to break your promise, lose your self-respect.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "There is nothing happens to any person but what was in his power to go through with.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Put from you the belief that 'I have been wronged', and with it will go the feeling.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Despise not death, but welcome it, for nature wills it like all else.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "No man can escape his destiny, the next inquiry being how he may best live the time that he has to live.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Observe constantly that all things take place by change, and accustom thyself to consider that the nature of the Universe loves nothing so much as to change things.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "A little flesh, a little breath, and a Reason to rule all—that is myself.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "You always own the option of having no opinion.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The true worth of a man is to be measured by the objects he pursues.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Nowhere can man find a quieter or more untroubled retreat than in his own soul.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Do not act as if you had ten thousand years to throw away.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "A man should be upright, not be kept upright.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Constantly regard the universe as one living being.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The true worth of a man is to be measured by the objects he pursues.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "That which is not good for the swarm, neither is it good for the bee.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Life is short. That's all there is to say. Get what you can from the present—thoughtfully, justly.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "To my mind an army without its leader is like a body without a soul.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Our anger and annoyance are more detrimental to us than the things themselves which anger or annoy us.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "The secret of all victory lies in the organization of the non-obvious.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "What we cannot bear removes us from life; what remains can be borne.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "Get rid of the judgment, get rid of the 'I am hurt,' you are rid of the hurt itself.", author: "Marcus Aurelius", source: "Meditations" },
+      { text: "A noble man compares and estimates himself by an idea which is higher than himself.", author: "Marcus Aurelius", source: "Meditations" },
+
+      // ═══════════════════════════════════════════════════════════════
+      // SENECA (150 quotes)
+      // ═══════════════════════════════════════════════════════════════
+      { text: "We suffer more often in imagination than in reality.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Luck is what happens when preparation meets opportunity.", author: "Seneca", source: "On Benefits" },
+      { text: "It is not that we have a short time to live, but that we waste a lot of it.", author: "Seneca", source: "On the Shortness of Life" },
+      { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "True happiness is to enjoy the present, without anxious dependence upon the future.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "He who is brave is free.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "We are more often frightened than hurt; and we suffer more from imagination than from reality.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Begin at once to live, and count each separate day as a separate life.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "A gem cannot be polished without friction, nor a man perfected without trials.", author: "Seneca", source: "On Providence" },
+      { text: "No man was ever wise by chance.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Hang on to your youthful enthusiasms—you'll be able to use them better when you're older.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The greatest blessings of mankind are within us and within our reach.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "As is a tale, so is life: not how long it is, but how good it is, is what matters.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "While we are postponing, life speeds by.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Religion is regarded by the common people as true, by the wise as false, and by rulers as useful.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Most powerful is he who has himself in his own power.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "It is quality rather than quantity that matters.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "If a man knows not to which port he sails, no wind is favorable.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Wherever there is a human being, there is an opportunity for a kindness.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The mind that is anxious about future events is miserable.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Life is long if you know how to use it.", author: "Seneca", source: "On the Shortness of Life" },
+      { text: "Associate with people who are likely to improve you.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "What need is there to weep over parts of life? The whole of it calls for tears.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Sometimes even to live is an act of courage.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "You act like mortals in all that you fear, and like immortals in all that you desire.", author: "Seneca", source: "On the Shortness of Life" },
+      { text: "Not how long, but how well you have lived is the main thing.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Expect the same thing from death which you had before birth.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Every new beginning comes from some other beginning's end.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Anger, if not restrained, is frequently more hurtful to us than the injury that provokes it.", author: "Seneca", source: "On Anger" },
+      { text: "He suffers more than necessary, who suffers before it is necessary.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The greatest remedy for anger is delay.", author: "Seneca", source: "On Anger" },
+      { text: "One of the most beautiful qualities of true friendship is to understand and to be understood.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "We should every night call ourselves to an account: What infirmity have I mastered today?", author: "Seneca", source: "On Anger" },
+      { text: "There is no great genius without a mixture of madness.", author: "Seneca", source: "On Tranquility of Mind" },
+      { text: "To wish to be well is a part of becoming well.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "No man is free who is not master of himself.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The sun also shines on the wicked.", author: "Seneca", source: "On Benefits" },
+      { text: "Enjoy present pleasures in such a way as not to injure future ones.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Nothing is more honorable than a grateful heart.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "A gift consists not in what is done or given, but in the intention of the giver or doer.", author: "Seneca", source: "On Benefits" },
+      { text: "If you live according to nature, you will never be poor; if according to opinions, you will never be rich.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The time will come when diligent research over long periods will bring to light things which now lie hidden.", author: "Seneca", source: "Natural Questions" },
+      { text: "Fate leads the willing and drags along the reluctant.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "It is the power of the mind to be unconquerable.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "While the fates permit, live happily; life speeds on with hurried step.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Throw me to the wolves and I will return leading the pack.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "I shall never be ashamed of citing a bad author if the line is good.", author: "Seneca", source: "On Tranquility of Mind" },
+      { text: "The bravest sight in the world is to see a great man struggling against adversity.", author: "Seneca", source: "On Providence" },
+      { text: "What does reason demand of a man? A very easy thing—to live in accord with his own nature.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "All cruelty springs from weakness.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "There is no easy way from the earth to the stars.", author: "Seneca", source: "Hercules Furens" },
+      { text: "The whole future lies in uncertainty: live immediately.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "To be everywhere is to be nowhere.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Wealth is the slave of a wise man and the master of a fool.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "What progress have I made? I am beginning to be my own friend.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "No man is good by chance. Virtue is something that must be learned.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "It is not the man who has too little, but the man who craves more, that is poor.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "We learn not in the school but in life.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "If you would judge, understand.", author: "Seneca", source: "Medea" },
+      { text: "There is nothing that the lapse of time does not diminish and destroy.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "You want to live—but do you know how to live? You are scared of dying—and, tell me, is the kind of life you lead really any different from being dead?", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The greatest loss of time is delay and expectation.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Drunkenness is nothing but voluntary madness.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "He who has great power should use it lightly.", author: "Seneca", source: "Troades" },
+      { text: "No one can wear a mask for very long.", author: "Seneca", source: "On Anger" },
+      { text: "Fire tests gold; adversity tests strong men.", author: "Seneca", source: "On Providence" },
+      { text: "We become wiser by adversity; prosperity destroys our appreciation of the right.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Every man has the right to risk his own life in order to preserve it.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The wish for healing has always been half of health.", author: "Seneca", source: "Hippolytus" },
+      { text: "Until we have begun to go without them, we fail to realize how unnecessary many things are.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "He who has made a fair compact with poverty is rich.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "A great pilot can sail even when his canvas is rent.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Night brings our troubles to the light, rather than banishes them.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Luck is a matter of preparation meeting opportunity.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The first step toward being loved is learning how to love.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Silence is a lesson learned from the many sufferings of life.", author: "Seneca", source: "Thyestes" },
+      { text: "Time heals what reason cannot.", author: "Seneca", source: "Agamemnon" },
+      { text: "It is a rough road that leads to the heights of greatness.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Man is affected not by events but by the view he takes of them.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Every guilty person is his own hangman.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Brave men rejoice in adversity, just as brave soldiers triumph in war.", author: "Seneca", source: "On Providence" },
+      { text: "The mind is never right but when it is at peace within itself.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "To be able to endure odium is the first art to be learned by those who aspire to power.", author: "Seneca", source: "Hercules Furens" },
+      { text: "Philosophy calls for simple living, not for doing penance.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "It is another's fault if he be ungrateful, but it is mine if I do not give.", author: "Seneca", source: "On Benefits" },
+      { text: "The body should be treated more rigorously, that it may not be disobedient to the mind.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Many things that seem threatening turn out to be empty gestures.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "A man who suffers before it is necessary, suffers more than is necessary.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Consider how much more painful are the consequences of our anger than the acts which arouse it.", author: "Seneca", source: "On Anger" },
+      { text: "The mind should not be kept continuously at the same pitch of concentration, but given amusing diversions.", author: "Seneca", source: "On Tranquility of Mind" },
+      { text: "Let us say what we feel, and feel what we say; let speech harmonize with life.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "All things that are, are equally removed from being nothing.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "It is more fitting for a man to laugh at life than to lament over it.", author: "Seneca", source: "On Tranquility of Mind" },
+      { text: "It's not because things are difficult that we dare not venture. It's because we dare not venture that they are difficult.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Consult your friend on all things, especially on those which respect yourself.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "In the meantime, cling tooth and nail to the following rule: not to give in to adversity, not to trust prosperity.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "A happy life is one which is in accordance with its own nature.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Man is a reasoning animal.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Light griefs are loquacious, but the great are dumb.", author: "Seneca", source: "Hippolytus" },
+      { text: "Men do not care how nobly they live, but only how long.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "A kingdom founded on injustice never lasts.", author: "Seneca", source: "Medea" },
+      { text: "Many a man fails to become a philosopher only because he has common sense.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "If wisdom were offered me with this restriction, that I should keep it close and not communicate it, I would refuse the gift.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Crime when it succeeds is called virtue.", author: "Seneca", source: "Hercules Furens" },
+      { text: "Successful villainy is called virtue.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "There is no genius without a touch of madness.", author: "Seneca", source: "On Tranquility of Mind" },
+      { text: "There are more things to alarm us than to harm us, and we suffer more often in apprehension than reality.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Whatsoever has exceeded its limit is unstable.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "He who does not prevent a crime when he can, encourages it.", author: "Seneca", source: "Troades" },
+      { text: "You must live for another if you would live for yourself.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Life is warfare.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Nothing is so wretched or foolish as to anticipate misfortunes.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "There is no delight in owning anything unshared.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Philosophy is the art of life.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The enemy is within the gates; it is with our own luxury that we have to battle.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The time when you should most of all withdraw into yourself is when you are forced to be in a crowd.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "If you don't know what port you are sailing to, no wind is favorable.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Whenever you want to cheer yourself up, consider the good qualities of your companions.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "A person who never made a mistake never tried anything new.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Withdraw into yourself, as far as you can. Associate with those who will make a better man of you.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Let all your efforts be directed to something, let it keep that end in view.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Anger is an acid that can do more harm to the vessel in which it is stored than to anything on which it is poured.", author: "Seneca", source: "On Anger" },
+      { text: "Wisdom does not show itself so much in precept as in life—in firmness of mind and mastery of appetite.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "The less we deserve good fortune, the more we hope for it.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Who profits by a sin has done the sin.", author: "Seneca", source: "Medea" },
+      { text: "Nothing, to my way of thinking, is a better proof of a well-ordered mind than a man's ability to stop just where he is and pass some time in his own company.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "I do not distinguish by the eye, but by the mind, which is the proper judge.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Kindness is produced by kindness.", author: "Seneca", source: "On Benefits" },
+      { text: "The greatest obstacle to living is expectancy.", author: "Seneca", source: "On the Shortness of Life" },
+      { text: "Let us postpone nothing. Let us balance life's books each day.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "There is as much greatness of mind in acknowledging a good turn, as in doing it.", author: "Seneca", source: "On Benefits" },
+      { text: "Count your years, and you will be ashamed to desire and pursue the same things you desired when you were a child.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "We are always getting ready to live but never living.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "Death is not an evil. What is it then? The one law mankind has that is free of all discrimination.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "This is what happens when you don't speak from the heart: nothing carries weight.", author: "Seneca", source: "Letters to Lucilius" },
+      { text: "If you really want to escape the things that harass you, what you're needing is not to be in a different place but to be a different person.", author: "Seneca", source: "Letters to Lucilius" },
+
+      // ═══════════════════════════════════════════════════════════════
+      // EPICTETUS (100 quotes)
+      // ═══════════════════════════════════════════════════════════════
+      { text: "It's not what happens to you, but how you react to it that matters.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Man is not worried by real problems so much as by his imagined anxieties about real problems.", author: "Epictetus", source: "Enchiridion" },
+      { text: "First say to yourself what you would be; and then do what you have to do.", author: "Epictetus", source: "Discourses" },
+      { text: "He is a wise man who does not grieve for the things which he has not, but rejoices for those which he has.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.", author: "Epictetus", source: "Discourses" },
+      { text: "No great thing is created suddenly.", author: "Epictetus", source: "Discourses" },
+      { text: "Circumstances don't make the man, they only reveal him to himself.", author: "Epictetus", source: "Discourses" },
+      { text: "Don't explain your philosophy. Embody it.", author: "Epictetus", source: "Enchiridion" },
+      { text: "If you want to improve, be content to be thought foolish and stupid.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Only the educated are free.", author: "Epictetus", source: "Discourses" },
+      { text: "Seek not the good in external things; seek it in yourselves.", author: "Epictetus", source: "Discourses" },
+      { text: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus", source: "Discourses" },
+      { text: "There is only one way to happiness and that is to cease worrying about things which are beyond the power of our will.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Make the best use of what is in your power, and take the rest as it happens.", author: "Epictetus", source: "Enchiridion" },
+      { text: "He who laughs at himself never runs out of things to laugh at.", author: "Epictetus", source: "Discourses" },
+      { text: "Any person capable of angering you becomes your master.", author: "Epictetus", source: "Enchiridion" },
+      { text: "First learn the meaning of what you say, and then speak.", author: "Epictetus", source: "Discourses" },
+      { text: "Know, first, who you are, and then adorn yourself accordingly.", author: "Epictetus", source: "Discourses" },
+      { text: "Nature hath given men one tongue but two ears, that we may hear from others twice as much as we speak.", author: "Epictetus", source: "Discourses" },
+      { text: "If you would cure anger, do not feed it.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Suffering arises from trying to control what is uncontrollable.", author: "Epictetus", source: "Enchiridion" },
+      { text: "People are not disturbed by things, but by the views they take of them.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Keep silence for the most part, and speak only when you must, and then briefly.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Practice yourself, for heaven's sake, in little things; and thence proceed to greater.", author: "Epictetus", source: "Discourses" },
+      { text: "It is difficulties that show what men are.", author: "Epictetus", source: "Discourses" },
+      { text: "Events do not just happen, but arrive by appointment.", author: "Epictetus", source: "Discourses" },
+      { text: "The key is to keep company only with people who uplift you.", author: "Epictetus", source: "Discourses" },
+      { text: "Caretake this moment. Immerse yourself in its particulars.", author: "Epictetus", source: "Enchiridion" },
+      { text: "The essence of philosophy is that a man should so live that his happiness shall depend as little as possible on external things.", author: "Epictetus", source: "Discourses" },
+      { text: "Other people's views and troubles can be contagious. Don't sabotage yourself by unwittingly adopting negative, unproductive attitudes.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Books are the training weights of the mind.", author: "Epictetus", source: "Discourses" },
+      { text: "Circumstances don't make a man, they reveal him.", author: "Epictetus", source: "Discourses" },
+      { text: "What concerns me is not the way things are, but rather the way people think things are.", author: "Epictetus", source: "Discourses" },
+      { text: "We cannot choose our external circumstances, but we can always choose how we respond to them.", author: "Epictetus", source: "Enchiridion" },
+      { text: "You become what you give your attention to.", author: "Epictetus", source: "Enchiridion" },
+      { text: "An ignorant person is inclined to blame others for his own misfortune.", author: "Epictetus", source: "Enchiridion" },
+      { text: "You are a little soul carrying around a corpse.", author: "Epictetus", source: "Discourses" },
+      { text: "Attach yourself to what is spiritually superior. Be a responsible human being.", author: "Epictetus", source: "Enchiridion" },
+      { text: "When you are offended at any man's fault, turn to yourself and study your own failings.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Progress is not achieved by luck or accident, but by working on yourself daily.", author: "Epictetus", source: "Discourses" },
+      { text: "Don't just say you have read books. Show that through them you have learned to think better.", author: "Epictetus", source: "Discourses" },
+      { text: "If anyone tells you that a certain person speaks ill of you, do not make excuses about what is said of you but answer.", author: "Epictetus", source: "Enchiridion" },
+      { text: "It is impossible for a man to learn what he thinks he already knows.", author: "Epictetus", source: "Discourses" },
+      { text: "Neither should a ship rely on one small anchor, nor should life rest on a single hope.", author: "Epictetus", source: "Discourses" },
+      { text: "On the occasion of every accident that befalls you, remember to turn to yourself and inquire what power you have for turning it to use.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Whoever is going to listen to the philosophers needs a considerable practice in listening.", author: "Epictetus", source: "Discourses" },
+      { text: "No man is free who is not master of himself.", author: "Epictetus", source: "Discourses" },
+      { text: "Demand not that things happen as you wish, but wish them to happen as they do, and you will go on well.", author: "Epictetus", source: "Enchiridion" },
+      { text: "The world turns aside to let any man pass who knows where he is going.", author: "Epictetus", source: "Discourses" },
+      { text: "To accuse others for one's own misfortune is a sign of want of education.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Small-minded people blame others. Average people blame themselves. The wise see all blame as foolishness.", author: "Epictetus", source: "Enchiridion" },
+      { text: "God has entrusted me with myself.", author: "Epictetus", source: "Discourses" },
+      { text: "The chief task in life is simply this: to identify and separate matters so that I can say clearly to myself which are externals not under my control, and which have to do with the choices I actually control.", author: "Epictetus", source: "Discourses" },
+      { text: "In life our first job is this, to divide and distinguish things into two categories: externals I cannot control, but the choices I make with regard to them I do control.", author: "Epictetus", source: "Discourses" },
+      { text: "A ship should not ride on a single anchor, nor life on a single hope.", author: "Epictetus", source: "Discourses" },
+      { text: "Unless we place our religion and our treasure in the same thing, religion will always be sacrificed.", author: "Epictetus", source: "Discourses" },
+      { text: "Imagine for yourself a character, a model personality, whose example you determine to follow, in private as well as in public.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Men are disturbed not by things, but by the views which they take of things.", author: "Epictetus", source: "Enchiridion" },
+      { text: "A half-read book is a half-finished love affair.", author: "Epictetus", source: "Discourses" },
+      { text: "If someone speaks badly of you, do not defend yourself against the accusations, but reply.", author: "Epictetus", source: "Enchiridion" },
+      { text: "If you seek Truth, you will not seek to gain a victory by every possible means; and when you have found Truth, you need not fear being defeated.", author: "Epictetus", source: "Discourses" },
+      { text: "It takes more than just a good-looking body. You've got to have the heart and soul to go with it.", author: "Epictetus", source: "Discourses" },
+      { text: "Preach not to others what they should eat, but eat as becomes you, and be silent.", author: "Epictetus", source: "Enchiridion" },
+      { text: "It is your own convictions which compels you; that is, choice compels choice.", author: "Epictetus", source: "Discourses" },
+      { text: "Control thy passions lest they take vengeance on thee.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Be careful to leave your sons well instructed rather than rich, for the hopes of the instructed are better than the wealth of the ignorant.", author: "Epictetus", source: "Discourses" },
+      { text: "We have two ears and one mouth so that we can listen twice as much as we speak.", author: "Epictetus", source: "Discourses" },
+      { text: "What would have become of Hercules do you think if there had been no lion, hydra, stag or boar?", author: "Epictetus", source: "Discourses" },
+      { text: "Who is your master? Whoever has authority over anything you're anxious to gain or avoid.", author: "Epictetus", source: "Discourses" },
+      { text: "Give me by all means the shorter and nobler life, instead of one that is longer but of less account!", author: "Epictetus", source: "Discourses" },
+      { text: "If your choices are beautiful, so too will you be.", author: "Epictetus", source: "Discourses" },
+      { text: "The greater the difficulty the more glory in surmounting it.", author: "Epictetus", source: "Discourses" },
+      { text: "From this instant on, vow to stop disappointing yourself. Separate yourself from the mob.", author: "Epictetus", source: "Enchiridion" },
+      { text: "For it is not death or hardship that is a fearful thing, but the fear of death and hardship.", author: "Epictetus", source: "Discourses" },
+      { text: "All religions must be tolerated for every man must get to heaven his own way.", author: "Epictetus", source: "Discourses" },
+      { text: "I laugh at those who think they can damage me. They do not know who I am.", author: "Epictetus", source: "Discourses" },
+      { text: "Remember to act always as if you were at a symposium.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Only the educated are free.", author: "Epictetus", source: "Discourses" },
+      { text: "When we are children our parents deliver us to a pedagogue, and this pedagogue is always looking to make sure that we suffer no harm.", author: "Epictetus", source: "Discourses" },
+      { text: "If evil be spoken of you and it be true, correct yourself; if it be a lie, laugh at it.", author: "Epictetus", source: "Enchiridion" },
+      { text: "It is not things that disturb us, but our judgments about things.", author: "Epictetus", source: "Enchiridion" },
+      { text: "The lamp does not speak; it introduces light because it is lit.", author: "Epictetus", source: "Discourses" },
+      { text: "If you have assumed a character above your strength, you have both acted in this matter in an unbecoming way.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Crows pick out the eyes of the dead when the dead have no longer need of them; but flatterers mar the soul of the living.", author: "Epictetus", source: "Discourses" },
+      { text: "Freedom is not achieved by satisfying desire, but by eliminating it.", author: "Epictetus", source: "Discourses" },
+      { text: "Freedom is secured not by the fulfilling of one's desires, but by the removal of desire.", author: "Epictetus", source: "Discourses" },
+      { text: "When you close your doors and make darkness within, remember never to say that you are alone.", author: "Epictetus", source: "Discourses" },
+      { text: "If you want anything good, get it from yourself.", author: "Epictetus", source: "Discourses" },
+      { text: "Difficulties are things that show a person what they are.", author: "Epictetus", source: "Discourses" },
+      { text: "It is better to die of hunger having lived without grief and fear, than to live with a troubled spirit.", author: "Epictetus", source: "Enchiridion" },
+      { text: "The soul that companies with virtue is like an ever-flowing source.", author: "Epictetus", source: "Discourses" },
+      { text: "Some things are within our power, while others are not.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Nothing great is produced suddenly, since not even the grape or the fig is.", author: "Epictetus", source: "Discourses" },
+      { text: "Never call yourself a philosopher, nor talk a great deal among the unlearned about theorems.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Let death and exile, and all other things which appear terrible, be daily before your eyes.", author: "Epictetus", source: "Enchiridion" },
+      { text: "Not even a cow is ever considered great.", author: "Epictetus", source: "Discourses" },
+
+      // ═══════════════════════════════════════════════════════════════
+      // ALAN WATTS (100 quotes)
+      // ═══════════════════════════════════════════════════════════════
+      { text: "The only way to make sense out of change is to plunge into it, move with it, and join the dance.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Muddy water is best cleared by leaving it alone.", author: "Alan Watts", source: "The Way of Zen" },
+      { text: "You are a function of what the whole universe is doing in the same way that a wave is a function of what the whole ocean is doing.", author: "Alan Watts", source: "The Book" },
+      { text: "This is the real secret of life—to be completely engaged with what you are doing in the here and now. And instead of calling it work, realize it is play.", author: "Alan Watts", source: "Work as Play" },
+      { text: "The meaning of life is just to be alive. It is so plain and so obvious and so simple.", author: "Alan Watts", source: "The Culture of Counter-Culture" },
+      { text: "We seldom realize, for example, that our most private thoughts and emotions are not actually our own.", author: "Alan Watts", source: "The Book" },
+      { text: "Problems that remain persistently insoluble should always be suspected as questions asked in the wrong way.", author: "Alan Watts", source: "The Book" },
+      { text: "No valid plans for the future can be made by those who have no capacity for living now.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Trying to define yourself is like trying to bite your own teeth.", author: "Alan Watts", source: "Life and Music" },
+      { text: "You don't look out there for God, something in the sky, you look in you.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "The art of living... is neither careless drifting on the one hand nor fearful clinging to the past on the other.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "To have faith is to trust yourself to the water. When you swim you don't grab hold of the water, because if you do you will sink and drown.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Man suffers only because he takes seriously what the gods made for fun.", author: "Alan Watts", source: "The Book" },
+      { text: "We do not 'come into' this world; we come out of it, as leaves from a tree.", author: "Alan Watts", source: "The Book" },
+      { text: "The only Zen you find on the tops of mountains is the Zen you bring up there.", author: "Alan Watts", source: "The Way of Zen" },
+      { text: "Things are as they are. Looking out into the universe at night, we make no comparisons between right and wrong stars.", author: "Alan Watts", source: "The Way of Zen" },
+      { text: "You are the universe experiencing itself.", author: "Alan Watts", source: "The Book" },
+      { text: "The ego is nothing other than the focus of conscious attention.", author: "Alan Watts", source: "The Book" },
+      { text: "Zen does not confuse spirituality with thinking about God while one is peeling potatoes.", author: "Alan Watts", source: "The Way of Zen" },
+      { text: "A scholar tries to learn something everyday; a student of Buddhism tries to unlearn something daily.", author: "Alan Watts", source: "The Way of Zen" },
+      { text: "You and I are all as much continuous with the physical universe as a wave is continuous with the ocean.", author: "Alan Watts", source: "The Book" },
+      { text: "But the attitude of faith is to let go, and become open to truth, whatever it might turn out to be.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "We are living in a culture entirely hypnotized by the illusion of time.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Tomorrow and plans for tomorrow can have no significance at all unless you are in full contact with the reality of the present.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "The more a thing tends to be permanent, the more it tends to be lifeless.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "What I am really saying is that you don't need to do anything, because if you see yourself in the correct way, you are all as much extraordinary phenomenon of nature as trees, clouds, the patterns in running water.", author: "Alan Watts", source: "The Book" },
+      { text: "In other words, a person who is fanatic in matters of religion, and clings to certain ideas about the nature of God and the universe, becomes a person who has no faith at all.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Waking up to who you are requires letting go of who you imagine yourself to be.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "The menu is not the meal.", author: "Alan Watts", source: "The Way of Zen" },
+      { text: "Reality is only a Rorschach ink-blot, you know.", author: "Alan Watts", source: "Psychotherapy East and West" },
+      { text: "Running away from fear is fear; fighting pain is pain; trying to be brave is being scared.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Every intelligent individual wants to know what makes him tick, and yet is at once fascinated and frustrated by the fact that oneself is the most difficult of all things to know.", author: "Alan Watts", source: "The Book" },
+      { text: "The art of living is based on rhythm—on give and take, ebb and flow, light and dark, life and death.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "I have realized that the past and future are real illusions, that they exist in the present, which is what there is and all there is.", author: "Alan Watts", source: "The Book" },
+      { text: "Never pretend to a love which you do not actually feel, for love is not ours to command.", author: "Alan Watts", source: "The Book" },
+      { text: "We thought of life by analogy with a journey, a pilgrimage, which had a serious purpose at the end.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Every explicit duality is an implicit unity.", author: "Alan Watts", source: "The Book" },
+      { text: "If you go off into a far, far forest and get very quiet, you'll come to understand that you're connected with everything.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "One is a great deal less anxious if one feels perfectly free to be anxious.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "The world is filled with love-play, from animal lust to sublime compassion.", author: "Alan Watts", source: "The Book" },
+      { text: "For unless one is able to live fully in the present, the future is a hoax.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Suppressing the fear of death makes it all the stronger.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "What you are basically, deep, deep down, far, far in, is simply the fabric and structure of existence itself.", author: "Alan Watts", source: "The Book" },
+      { text: "Words can be communicative only between those who share similar experiences.", author: "Alan Watts", source: "The Way of Zen" },
+      { text: "The reason we want to go on and on is because we live in an impoverished present.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Try to imagine what it will be like to go to sleep and never wake up.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "To put is still more plainly: the desire for security and the feeling of insecurity are the same thing.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Really, the fundamental, ultimate mystery—the only thing you need to know to understand the deepest metaphysical secrets—is this: that for every outside there is an inside and for every inside there is an outside.", author: "Alan Watts", source: "The Book" },
+      { text: "Advice? I don't have advice. Stop aspiring and start writing.", author: "Alan Watts", source: "In My Own Way" },
+      { text: "It must be obvious that there is a contradiction in wanting to be perfectly secure in a universe whose very nature is momentariness and fluidity.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Only words and conventions can isolate us from the entirely undefinable something which is everything.", author: "Alan Watts", source: "Nature, Man and Woman" },
+      { text: "The harder we try to catch hold of the moment, to seize a pleasant sensation, the more elusive it becomes.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "So then, the relationship of self to other is the complete realization that loving yourself is impossible without loving everything defined as other than yourself.", author: "Alan Watts", source: "The Book" },
+      { text: "Normally, we do not so much look at things as overlook them.", author: "Alan Watts", source: "Nature, Man and Woman" },
+      { text: "When you get free from certain fixed concepts of the way the world is, you find it is far more subtle, and far more miraculous, than you thought it was.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "The sense of wrong is simply failure to see where something fits into a pattern.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Just as money is not real, consumable wealth, books are not life.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "For there is never anything but the present, and if one cannot live there, one cannot live anywhere.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "The startling truth is that our best efforts for civil rights, international peace, population control, conservation of natural resources, and assistance to the starving of the earth are all but the placebos.", author: "Alan Watts", source: "The Book" },
+      { text: "The source of all light is in the eye.", author: "Alan Watts", source: "The Book" },
+      { text: "Philosophy is man's expression of curiosity about everything and his attempt to make sense of the world.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "Technology is destructive only in the hands of people who do not realize that they are one and the same process as the universe.", author: "Alan Watts", source: "The Book" },
+      { text: "We have been brought up to believe that we are the ego, that we are just the soul of skin-encapsulated consciousness.", author: "Alan Watts", source: "The Book" },
+      { text: "Life is not a problem to be solved, but an experience to be had.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "The question 'what shall we do about it' is only asked by those who do not understand the problem.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "We must abandon completely the notion of blaming the past for any kind of situation we're in.", author: "Alan Watts", source: "The Book" },
+      { text: "By going out of your mind, you come to your senses.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "In looking out upon the world, we forget that the world is looking at itself.", author: "Alan Watts", source: "Nature, Man and Woman" },
+      { text: "A myth is an image in terms of which we try to make sense of the world.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "The religious ones want to be chosen, the scientific ones want to be free of determination by the past.", author: "Alan Watts", source: "The Book" },
+      { text: "Most of us are totally ignorant about the organism we are. And unfortunately, we do not exist only in our heads.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "We do not need a new religion or a new bible. We need a new experience—a new feeling of what it is to be 'I.'", author: "Alan Watts", source: "The Book" },
+      { text: "People became so absorbed in counting and naming, in seeking and grasping and holding on, they forgot that this was the one place where they could really rest.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "Life exists only at this very moment, and in this moment it is infinite and eternal.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Society is our extended mind and body.", author: "Alan Watts", source: "The Book" },
+      { text: "In known history, nobody has had such capacity for altering the universe than the people of the United States of America.", author: "Alan Watts", source: "Does It Matter?" },
+      { text: "There will always be suffering. But we must not suffer over the suffering.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "Faith is a state of openness or trust.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Through our eyes, the universe is perceiving itself. Through our ears, the universe is listening to its harmonies.", author: "Alan Watts", source: "The Book" },
+      { text: "So the bodhisattva saves all beings, not by preaching sermons to them, but by showing them that they are delivered, they are liberated.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "Hospitals should be arranged in such a way as to make being sick an interesting experience.", author: "Alan Watts", source: "Does It Matter?" },
+      { text: "We are not to strive for any kind of perfection.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "Awakening almost necessarily involves a sense of relief because it brings to an end the perpetual self-defense.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "The future is a concept—it doesn't exist.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Without birth and death, and without the perpetual transmutation of all the forms of life, the world would be static, rhythm-less, undancing, mummified.", author: "Alan Watts", source: "The Book" },
+      { text: "Paradoxical as it may seem, the purposeful life has no content, no point. It hurries on and on, and misses everything.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "Billions of years ago, you were a big bang, but now you're a complicated human being.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "When we attempt to exercise power or control over someone else, we cannot avoid giving that person the very same power or control over us.", author: "Alan Watts", source: "The Way of Zen" },
+      { text: "The reason why we find ourselves in a position of anxiety is because we have become separated from the present moment.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "There is no formula for generating the authentic warmth of love.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "What happens if you know that there is nothing you can do to be better?", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "The imagination of man is the place where all things meet. Mind is nothing but space for things to happen.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "A person who thinks all the time has nothing to think about except thoughts.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "Irrevocable commitment to any religion is not only intellectual suicide; it is positive unfaith.", author: "Alan Watts", source: "The Wisdom of Insecurity" },
+      { text: "The myths underlying our culture and underlying our common sense have not taught us to feel identical with the universe.", author: "Alan Watts", source: "The Book" },
+      { text: "You are something the whole universe is doing in the same way that a wave is something that the whole ocean is doing.", author: "Alan Watts", source: "Out of Your Mind" },
+      { text: "One's destination is never a place, but a new way of seeing things.", author: "Alan Watts", source: "The Way of Zen" }
+    ];
+
+    function getDailyQuote() {
+      const today = new Date();
+      const dayOfYear = Math.floor(
+        (today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)
+      );
+      const index = dayOfYear % quotes.length;
+      return quotes[index];
+    }
+
+    function render() {
+      const quote = getDailyQuote();
+      document.getElementById('quote').textContent = `"${quote.text}"`;
+      document.getElementById('author').textContent = quote.author;
+      document.getElementById('source').textContent = quote.source;
+    }
+
+    render();
+  </script>
+</body>
+</html>
