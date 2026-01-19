@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Stoic Journal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --marble: #F5F5F5;
+      --charcoal: #2F2F2F;
+      --void: #000000;
+      --stone: #8A8A8A;
+      --bg: var(--void);
+      --text: var(--marble);
+      --text-muted: var(--stone);
+      --border: #3A3A3A;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: var(--marble);
+        --text: var(--charcoal);
+        --text-muted: #5A5A5A;
+        --border: #D0D0D0;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 24px;
+    }
+
+    .header {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    /* Corner decorations */
+    .corners {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+    .corner {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-color: var(--border);
+      border-style: solid;
+      opacity: 0.5;
+    }
+    .corner.tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
+    .corner.tr { top: 8px; right: 8px; border-width: 1px 1px 0 0; }
+    .corner.bl { bottom: 8px; left: 8px; border-width: 0 0 1px 1px; }
+    .corner.br { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .ornament {
+      color: var(--text-muted);
+      font-size: 10px;
+      letter-spacing: 4px;
+      opacity: 0.4;
+    }
+
+    .title {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .quote {
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      font-style: italic;
+      margin-bottom: 14px;
+      opacity: 0.9;
+    }
+
+    .attribution {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .divider-line {
+      width: 24px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .author {
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Subtle animation */
+    .header {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .quote { font-size: 16px; }
+      .title { font-size: 12px; letter-spacing: 3px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="corners">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+  </div>
+
+  <div class="header">
+    <div class="title-row">
+      <span class="ornament">///</span>
+      <span class="title">The Stoic Journal</span>
+      <span class="ornament">///</span>
+    </div>
+    <p class="quote" id="quote"></p>
+    <div class="attribution">
+      <div class="divider-line"></div>
+      <span class="author" id="author"></span>
+      <div class="divider-line"></div>
+    </div>
+  </div>
+
+  <script>
+    // Curated subset for journal header - shorter, punchier quotes
+    const quotes = [
+      { text: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius" },
+      { text: "We suffer more often in imagination than in reality.", author: "Seneca" },
+      { text: "It's not what happens to you, but how you react to it that matters.", author: "Epictetus" },
+      { text: "The soul becomes dyed with the color of its thoughts.", author: "Marcus Aurelius" },
+      { text: "Begin at once to live, and count each separate day as a separate life.", author: "Seneca" },
+      { text: "No man is free who is not master of himself.", author: "Epictetus" },
+      { text: "The happiness of your life depends upon the quality of your thoughts.", author: "Marcus Aurelius" },
+      { text: "It is not that we have a short time to live, but that we waste a lot of it.", author: "Seneca" },
+      { text: "First say to yourself what you would be; and then do what you have to do.", author: "Epictetus" },
+      { text: "You have power over your mind—not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
+      { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca" },
+      { text: "Man is not worried by real problems so much as by his imagined anxieties.", author: "Epictetus" },
+      { text: "Loss is nothing else but change, and change is Nature's delight.", author: "Marcus Aurelius" },
+      { text: "A gem cannot be polished without friction, nor a man perfected without trials.", author: "Seneca" },
+      { text: "Don't explain your philosophy. Embody it.", author: "Epictetus" },
+      { text: "The impediment to action advances action. What stands in the way becomes the way.", author: "Marcus Aurelius" },
+      { text: "Life is long if you know how to use it.", author: "Seneca" },
+      { text: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
+      { text: "Dwell on the beauty of life. Watch the stars, and see yourself running with them.", author: "Marcus Aurelius" },
+      { text: "Sometimes even to live is an act of courage.", author: "Seneca" },
+      { text: "If you want to improve, be content to be thought foolish and stupid.", author: "Epictetus" },
+      { text: "Never let the future disturb you. You will meet it with the same weapons of reason.", author: "Marcus Aurelius" },
+      { text: "As is a tale, so is life: not how long it is, but how good it is, is what matters.", author: "Seneca" },
+      { text: "Freedom is the only worthy goal in life.", author: "Epictetus" },
+      { text: "The best revenge is not to be like your enemy.", author: "Marcus Aurelius" },
+      { text: "He who is brave is free.", author: "Seneca" },
+      { text: "The key is to keep company only with people who uplift you.", author: "Epictetus" },
+      { text: "Accept the things to which fate binds you, and love the people with whom fate brings you together.", author: "Marcus Aurelius" },
+      { text: "While we are postponing, life speeds by.", author: "Seneca" },
+      { text: "Caretake this moment. Immerse yourself in its particulars.", author: "Epictetus" },
+      { text: "You could leave life right now. Let that determine what you do and say and think.", author: "Marcus Aurelius" },
+      { text: "The mind that is anxious about future events is miserable.", author: "Seneca" },
+      { text: "He is a wise man who does not grieve for the things which he has not.", author: "Epictetus" },
+      { text: "It is in your power to withdraw yourself whenever you desire. Perfect tranquility within.", author: "Marcus Aurelius" },
+      { text: "Most powerful is he who has himself in his own power.", author: "Seneca" },
+      { text: "Make the best use of what is in your power, and take the rest as it happens.", author: "Epictetus" },
+      { text: "The only way to make sense out of change is to plunge into it, move with it, and join the dance.", author: "Alan Watts" },
+      { text: "This is the real secret of life — to be completely engaged with what you are doing in the here and now.", author: "Alan Watts" },
+      { text: "Muddy water is best cleared by leaving it alone.", author: "Alan Watts" },
+      { text: "The menu is not the meal.", author: "Alan Watts" },
+      { text: "You are a function of what the whole universe is doing in the same way that a wave is a function of what the whole ocean is doing.", author: "Alan Watts" },
+      { text: "Try to imagine what it will be like to go to sleep and never wake up. Now try to imagine what it was like to wake up having never gone to sleep.", author: "Alan Watts" },
+      { text: "Man suffers only because he takes seriously what the gods made for fun.", author: "Alan Watts" },
+      { text: "Every intelligent individual wants to know what makes him tick, and yet is at once fascinated and frustrated by the fact that oneself is the most difficult of all things to know.", author: "Alan Watts" },
+      { text: "We seldom realize that our most private thoughts are not our own at all, but picked up from the common mind.", author: "Alan Watts" },
+      { text: "No valid plans for the future can be made by those who have no capacity for living now.", author: "Alan Watts" },
+      { text: "To have faith is to trust yourself to the water. When you swim you don't grab hold of the water, because if you do you will sink and drown.", author: "Alan Watts" },
+      { text: "The art of living is neither careless drifting on the one hand nor fearful clinging on the other.", author: "Alan Watts" },
+      { text: "Problems that remain persistently insoluble should always be suspected as questions asked in the wrong way.", author: "Alan Watts" },
+      { text: "Trying to define yourself is like trying to bite your own teeth.", author: "Alan Watts" },
+    ];
+
+    function getDailyQuote() {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), 0, 0);
+      const diff = now - start;
+      const oneDay = 1000 * 60 * 60 * 24;
+      const dayOfYear = Math.floor(diff / oneDay);
+      return quotes[dayOfYear % quotes.length];
+    }
+
+    const quote = getDailyQuote();
+    document.getElementById('quote').textContent = `"${quote.text}"`;
+    document.getElementById('author').textContent = quote.author;
+  </script>
+</body>
+</html>
